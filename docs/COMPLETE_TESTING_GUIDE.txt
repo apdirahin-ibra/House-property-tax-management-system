@@ -1,0 +1,808 @@
+================================================================================
+    HOUSE PROPERTY TAX MANAGEMENT SYSTEM — COMPLETE TESTING GUIDE
+    Test All Roles Step by Step
+================================================================================
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+  DEMO ACCOUNTS (Created by: npm run seed)
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+
+  Role      | Email                 | Password        | Name
+  ----------|---------------------- |-----------------|------------------
+  Admin     | admin@example.com     | Admin@12345     | System Admin
+  Officer   | officer@example.com   | Officer@12345   | Tax Officer
+  Owner     | owner@example.com     | Owner@12345     | Property Owner
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+  STEP 0: SETUP — Run Before Testing
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+
+[ ] 0.1  Make sure MongoDB is running and MONGODB_URI is set in server/.env
+[ ] 0.2  Make sure JWT_SECRET is set in server/.env
+[ ] 0.3  Open terminal #1: cd server && npm install && npm run seed
+         → Expected: "Seed completed" message with summary of created data
+[ ] 0.4  Open terminal #1: npm run dev
+         → Expected: Server running on http://localhost:5000
+[ ] 0.5  Open terminal #2: cd client && npm install && npm run dev
+         → Expected: Client running on http://localhost:5173
+[ ] 0.6  Open browser and go to http://localhost:5173
+         → Expected: Login page loads with email and password fields
+[ ] 0.7  Test health endpoint: http://localhost:5000/api/health
+         → Expected: Returns OK / healthy response
+
+
+================================================================================
+================================================================================
+  PART 1: AUTHENTICATION TESTS
+================================================================================
+================================================================================
+
+[ ] 1.1  VALID LOGIN — Admin
+         → Go to http://localhost:5173
+         → Enter email: admin@example.com
+         → Enter password: Admin@12345
+         → Click Login
+         → EXPECTED: Redirects to /admin dashboard
+         → EXPECTED: Shows summary cards (properties, billed, collected, outstanding)
+         → Click Logout
+
+[ ] 1.2  VALID LOGIN — Officer
+         → Go to http://localhost:5173
+         → Enter email: officer@example.com
+         → Enter password: Officer@12345
+         → Click Login
+         → EXPECTED: Redirects to /officer dashboard
+         → EXPECTED: Shows operational summary cards
+         → Click Logout
+
+[ ] 1.3  VALID LOGIN — Owner
+         → Go to http://localhost:5173
+         → Enter email: owner@example.com
+         → Enter password: Owner@12345
+         → Click Login
+         → EXPECTED: Redirects to /owner dashboard
+         → EXPECTED: Shows owner's own properties and bills
+         → Click Logout
+
+[ ] 1.4  INVALID LOGIN — Wrong Password
+         → Go to http://localhost:5173
+         → Enter email: admin@example.com
+         → Enter password: WrongPassword
+         → Click Login
+         → EXPECTED: Error message appears (invalid credentials)
+         → EXPECTED: User stays on login page
+
+[ ] 1.5  INVALID LOGIN — Non-existent Email
+         → Enter email: nonexistent@example.com
+         → Enter password: AnyPassword
+         → Click Login
+         → EXPECTED: Error message appears
+
+[ ] 1.6  ROUTE PROTECTION — Unauthenticated Access
+         → While logged out, manually navigate to http://localhost:5173/admin
+         → EXPECTED: Redirects back to /login page
+         → Try http://localhost:5173/officer → EXPECTED: Redirects to /login
+         → Try http://localhost:5173/owner → EXPECTED: Redirects to /login
+
+[ ] 1.7  ROUTE PROTECTION — Cross-Role Access
+         → Login as Owner (owner@example.com / Owner@12345)
+         → Manually navigate to http://localhost:5173/admin
+         → EXPECTED: Access denied or redirected to owner dashboard
+         → Try http://localhost:5173/officer → EXPECTED: Access denied
+         → Logout
+
+
+================================================================================
+================================================================================
+  PART 2: ADMIN ROLE TESTS
+================================================================================
+================================================================================
+
+Login as Admin: admin@example.com / Admin@12345
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 2.1: Admin Dashboard
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 2.1.1  After login, verify the dashboard loads
+           → EXPECTED: Summary cards visible with numbers:
+             • Total Properties (should show 5 from seed data)
+             • Total Billed amount
+             • Total Collected amount
+             • Outstanding amount
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 2.2: User Management (Admin → Users Page)
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 2.2.1  Navigate to Users page from sidebar
+           → EXPECTED: Table showing existing users (at least 3 seeded users)
+           → EXPECTED: Shows Name, Email, Role, Status columns
+
+[ ] 2.2.2  CREATE a new Officer user
+           → Click "Add User" or "Create User" button
+           → Fill in the form:
+             Name:     Test Officer
+             Email:    testofficer@example.com
+             Password: TestOfficer@123
+             Role:     officer
+             Status:   active
+           → Click Save/Submit
+           → EXPECTED: New user appears in the user list
+           → EXPECTED: Success message shown
+
+[ ] 2.2.3  CREATE a new Owner user
+           → Click "Add User" or "Create User" button
+           → Fill in the form:
+             Name:     Test Owner
+             Email:    testowner@example.com
+             Password: TestOwner@123
+             Role:     owner
+             Status:   active
+           → Click Save/Submit
+           → EXPECTED: New user appears in the user list
+
+[ ] 2.2.4  UPDATE a user
+           → Find "Test Officer" in the list
+           → Click Edit
+           → Change the name to "Updated Officer"
+           → Click Save
+           → EXPECTED: Name updated in the list
+
+[ ] 2.2.5  DEACTIVATE a user
+           → Find "Updated Officer" in the list
+           → Click Delete/Deactivate
+           → Confirm the action
+           → EXPECTED: User status changes to "inactive"
+           → EXPECTED: Confirmation dialog appeared before deletion
+
+[ ] 2.2.6  SEARCH / FILTER users
+           → Use search box: type "admin"
+           → EXPECTED: Only admin user(s) shown
+           → Filter by role if filter controls exist
+           → Clear search
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 2.3: Owners Page (Admin View)
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 2.3.1  Navigate to Owners page from sidebar
+           → EXPECTED: Table showing 3 seeded owners:
+             • Ahmed Hassan (Hodan District)
+             • Fatima Ali (Waberi District)
+             • Omar Yusuf (Hamar Weyne)
+
+[ ] 2.3.2  SEARCH owners
+           → Type "Ahmed" in search box
+           → EXPECTED: Only Ahmed Hassan appears
+           → Clear search
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 2.4: Properties Page (Admin View)
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 2.4.1  Navigate to Properties page from sidebar
+           → EXPECTED: Table showing 5 seeded properties:
+             • PROP-SEED-001 (Zone A, Residential, Ahmed Hassan)
+             • PROP-SEED-002 (Zone A, Commercial, Ahmed Hassan)
+             • PROP-SEED-003 (Zone B, Residential, Fatima Ali)
+             • PROP-SEED-004 (Zone B, Residential, Fatima Ali)
+             • PROP-SEED-005 (Zone C, Industrial, Omar Yusuf)
+
+[ ] 2.4.2  FILTER by zone
+           → Select "Zone A" filter
+           → EXPECTED: Only 2 properties shown (PROP-SEED-001 and 002)
+           → Clear filter
+
+[ ] 2.4.3  FILTER by property type
+           → Select "Commercial" filter
+           → EXPECTED: Only PROP-SEED-002 shown
+           → Clear filter
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 2.5: Tax Rates Management (Admin Only Feature)
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 2.5.1  Navigate to Tax Rates page from sidebar
+           → EXPECTED: Table showing 4 seeded tax rates:
+             • Zone A / Residential / 2026 / percentage / 1.5
+             • Zone A / Commercial / 2026 / percentage / 2.0
+             • Zone B / Residential / 2026 / fixed / 500
+             • Zone C / Industrial / 2026 / percentage / 3.0
+
+[ ] 2.5.2  CREATE a new tax rate
+           → Click "Add Tax Rate" button
+           → Fill in:
+             Zone:          Zone D
+             Property Type: Residential
+             Tax Year:      2026
+             Rate Type:     fixed
+             Rate Value:    300
+           → Click Save
+           → EXPECTED: New tax rate appears in the list
+
+[ ] 2.5.3  EDIT a tax rate
+           → Find the Zone D rate you just created
+           → Click Edit
+           → Change rateValue to 350
+           → Click Save
+           → EXPECTED: Value updated to 350
+
+[ ] 2.5.4  DELETE a tax rate
+           → Find the Zone D rate
+           → Click Delete
+           → Confirm deletion
+           → EXPECTED: Tax rate removed from list
+           → EXPECTED: Confirmation dialog appeared
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 2.6: Bills Page (Admin View)
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 2.6.1  Navigate to Bills page from sidebar
+           → EXPECTED: Table showing 5 seeded bills:
+             • BILL-2026-SEED-001 → status: paid
+             • BILL-2026-SEED-002 → status: partial
+             • BILL-2026-SEED-003 → status: unpaid
+             • BILL-2026-SEED-004 → status: overdue (due date 2026-03-01 passed)
+             • BILL-2026-SEED-005 → status: unpaid
+
+[ ] 2.6.2  FILTER bills by status
+           → Select "paid" status filter
+           → EXPECTED: Only BILL-2026-SEED-001 shown
+           → Select "overdue" status filter
+           → EXPECTED: Only BILL-2026-SEED-004 shown
+           → Clear filter
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 2.7: Payments Page (Admin View)
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 2.7.1  Navigate to Payments page from sidebar
+           → EXPECTED: Table showing 2 seeded payments:
+             • PAY-SEED-001 (bank, full payment for BILL-2026-SEED-001)
+             • PAY-SEED-002 (mobile_money, $1000 partial for BILL-2026-SEED-002)
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 2.8: Reports Page (Admin View)
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 2.8.1  Navigate to Reports page from sidebar
+           → EXPECTED: Multiple report tabs/sections available:
+             • Summary report
+             • Collections report
+             • Outstanding report
+             • By-Zone report
+
+[ ] 2.8.2  Test Summary Report
+           → EXPECTED: Shows total billed, total collected, and outstanding totals
+
+[ ] 2.8.3  Test Collections Report
+           → EXPECTED: Shows payment collection data with method breakdown
+
+[ ] 2.8.4  Test Outstanding Report
+           → EXPECTED: Shows unpaid and overdue bills
+
+[ ] 2.8.5  Test By-Zone Report
+           → EXPECTED: Shows zone-based breakdown of tax data
+
+[ ] 2.8.6  Test Report Filters
+           → Apply tax year filter: 2026
+           → Apply zone filter: Zone A
+           → EXPECTED: Report data filters correctly
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 2.9: Audit Logs (Admin Only)
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 2.9.1  Navigate to Audit Logs page from sidebar
+           → EXPECTED: Table showing audit entries
+           → EXPECTED: At least 5 SEED entries from demo data creation
+
+[ ] 2.9.2  FILTER audit logs
+           → Filter by action: "SEED"
+           → EXPECTED: Shows only seed-related entries
+           → Filter by entity type if available
+           → Use search box if available
+           → Clear filters
+
+[ ] ADMIN TESTS COMPLETE → Logout
+
+
+================================================================================
+================================================================================
+  PART 3: TAX OFFICER ROLE TESTS
+================================================================================
+================================================================================
+
+Login as Officer: officer@example.com / Officer@12345
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 3.1: Officer Dashboard
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 3.1.1  After login, verify the officer dashboard loads
+           → EXPECTED: Summary cards visible with operational data
+           → EXPECTED: Sidebar shows officer-specific menu items
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 3.2: Register a New Owner
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 3.2.1  Navigate to Owners page
+           → Click "Add Owner" or "Register Owner" button
+           → Fill in the form:
+             Full Name:    Ali Mohamed
+             Phone:        +252615551234
+             Email:        ali@example.com
+             National ID:  ID-TEST-001
+             Address:      Wadajir District, Mogadishu
+           → Click Save
+           → EXPECTED: New owner "Ali Mohamed" appears in the list
+           → EXPECTED: Success message shown
+
+[ ] 3.2.2  VALIDATE required fields
+           → Click "Add Owner" button
+           → Leave Full Name empty, click Save
+           → EXPECTED: Validation error for required Full Name field
+           → Leave Phone empty, click Save
+           → EXPECTED: Validation error for required Phone field
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 3.3: Register a New Property
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 3.3.1  Navigate to Properties page
+           → Click "Add Property" or "Register Property" button
+           → Fill in the form:
+             Owner:          Select "Ali Mohamed" from dropdown
+             District:       Wadajir
+             Zone:           Zone A
+             Property Type:  Residential
+             Size (sqm):     150
+             Assessed Value: 60000
+             Usage Status:   occupied
+           → Click Save
+           → EXPECTED: New property created with auto-generated property code
+           → EXPECTED: Property appears in the list
+
+[ ] 3.3.2  UPDATE a property
+           → Find the property you just created
+           → Click Edit
+           → Change assessedValue to 65000
+           → Click Save
+           → EXPECTED: Property value updated to 65000
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 3.4: Generate Tax Assessment
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 3.4.1  Navigate to Assessments page
+           → Click "Generate Assessment" button
+           → Select the property you just created (Ali Mohamed's property)
+           → Set Tax Year: 2026
+           → Set Penalty: 0
+           → Set Discount: 0
+           → Click Generate/Submit
+           → EXPECTED: Assessment created successfully
+           → EXPECTED: baseTax = 65000 × 1.5 / 100 = $975
+             (Zone A Residential rate is 1.5% percentage)
+           → EXPECTED: totalDue = $975
+
+[ ] 3.4.2  VIEW assessment details
+           → Click on the assessment you just created
+           → EXPECTED: Shows property info, tax year, baseTax, penalty, discount, totalDue
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 3.5: Create a Bill
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 3.5.1  Navigate to Bills page
+           → Click "Create Bill" button
+           → Select the assessment from step 3.4.1
+           → Set Due Date: 2026-12-31
+           → Click Create/Submit
+           → EXPECTED: Bill created with:
+             • amountDue = $975
+             • amountPaid = $0
+             • balance = $975
+             • status = "unpaid"
+           → Note the bill number for next tests
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 3.6: Record a PARTIAL Payment
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 3.6.1  Navigate to Payments page
+           → Click "Record Payment" button
+           → Select the bill you created in step 3.5.1
+           → Fill in:
+             Amount Paid:    400
+             Method:         cash
+             Reference No:   PAY-TEST-001
+             Payment Date:   (today's date)
+           → Click Submit
+           → EXPECTED: Payment recorded successfully
+           → EXPECTED: Receipt auto-generated
+
+[ ] 3.6.2  VERIFY bill status update
+           → Go to Bills page
+           → Find the bill from step 3.5.1
+           → EXPECTED: 
+             • amountPaid = $400
+             • balance = $575
+             • status = "partial"
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 3.7: Record a FULL Payment (Pay Remaining Balance)
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 3.7.1  Navigate to Payments page
+           → Click "Record Payment" button
+           → Select the same bill from step 3.5.1
+           → Fill in:
+             Amount Paid:    575 (remaining balance)
+             Method:         bank
+             Reference No:   PAY-TEST-002
+             Payment Date:   (today's date)
+           → Click Submit
+           → EXPECTED: Payment recorded successfully
+
+[ ] 3.7.2  VERIFY bill is now PAID
+           → Go to Bills page
+           → Find the bill from step 3.5.1
+           → EXPECTED:
+             • amountPaid = $975
+             • balance = $0
+             • status = "paid"
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 3.8: Download Receipt PDF
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 3.8.1  Navigate to Receipts page (or Payments page)
+           → Find the receipt for PAY-TEST-001
+           → Click "Download PDF" or the PDF icon
+           → EXPECTED: PDF file downloads successfully
+           → Open the PDF
+           → EXPECTED: Receipt shows payment details:
+             • Amount paid
+             • Payment method
+             • Reference number
+             • Bill number
+             • Date
+
+[ ] 3.8.2  Download the second receipt (PAY-TEST-002)
+           → Click Download PDF
+           → EXPECTED: PDF downloads and opens correctly
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 3.9: Officer Reports
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 3.9.1  Navigate to Reports page
+           → EXPECTED: Reports load with filtered data
+           → EXPECTED: Can see summary, collections, and outstanding reports
+
+[ ] OFFICER TESTS COMPLETE → Logout
+
+
+================================================================================
+================================================================================
+  PART 4: PROPERTY OWNER ROLE TESTS
+================================================================================
+================================================================================
+
+Login as Owner: owner@example.com / Owner@12345
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 4.1: Owner Dashboard
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 4.1.1  After login, verify the owner dashboard/portal loads
+           → EXPECTED: Redirected to /owner path
+           → EXPECTED: Shows owner-specific sidebar (My Properties, My Bills, etc.)
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 4.2: My Properties
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 4.2.1  Navigate to "My Properties" page
+           → EXPECTED: Shows ONLY Ahmed Hassan's properties (2 properties):
+             • PROP-SEED-001 (Zone A, Residential, 120 sqm, $50,000)
+             • PROP-SEED-002 (Zone A, Commercial, 200 sqm, $120,000)
+           → EXPECTED: Does NOT show Fatima Ali's or Omar Yusuf's properties
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 4.3: My Bills
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 4.3.1  Navigate to "My Bills" page
+           → EXPECTED: Shows ONLY bills for Ahmed Hassan's properties:
+             • BILL-2026-SEED-001 (paid, balance = $0)
+             • BILL-2026-SEED-002 (partial, balance > $0)
+           → EXPECTED: Does NOT show bills for other owners
+
+[ ] 4.3.2  Check bill details
+           → Click on BILL-2026-SEED-001
+           → EXPECTED: Shows full bill details including amount due, paid, balance
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 4.4: My Payments
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 4.4.1  Navigate to "My Payments" page
+           → EXPECTED: Shows ONLY payments for Ahmed Hassan's bills:
+             • PAY-SEED-001 (bank payment for BILL-2026-SEED-001)
+             • PAY-SEED-002 (mobile_money $1000 for BILL-2026-SEED-002)
+           → EXPECTED: Does NOT show payments for other owners
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 4.5: My Receipts / Download PDF
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 4.5.1  Navigate to "Receipts" page
+           → EXPECTED: Shows receipts for Ahmed Hassan's payments:
+             • RCT-2026-SEED-001
+             • RCT-2026-SEED-002
+
+[ ] 4.5.2  Download a receipt PDF
+           → Click download for RCT-2026-SEED-001
+           → EXPECTED: PDF file downloads successfully
+           → EXPECTED: Receipt shows correct payment details
+
+────────────────────────────────────────────────────────────────────────────────
+  TEST 4.6: Owner Access Control
+────────────────────────────────────────────────────────────────────────────────
+
+[ ] 4.6.1  While logged in as Owner, try to access admin routes
+           → Navigate to http://localhost:5173/admin
+           → EXPECTED: Access denied / redirected to owner dashboard
+
+[ ] 4.6.2  Try to access officer routes
+           → Navigate to http://localhost:5173/officer
+           → EXPECTED: Access denied / redirected to owner dashboard
+
+[ ] OWNER TESTS COMPLETE → Logout
+
+
+================================================================================
+================================================================================
+  PART 5: UI QUALITY & UX TESTS
+================================================================================
+================================================================================
+
+[ ] 5.1  SIDEBAR NAVIGATION
+         → Login as each role and verify sidebar shows correct menu items
+         → Admin sidebar: Dashboard, Users, Owners, Properties, Tax Rates,
+           Bills, Payments, Reports, Audit Logs
+         → Officer sidebar: Dashboard, Owners, Properties, Assessments,
+           Bills, Payments, Receipts, Reports
+         → Owner sidebar: My Properties, My Bills, My Payments, Receipts
+
+[ ] 5.2  TABLE SEARCH & FILTERS
+         → On any table page, verify:
+           • Search box exists and filters results
+           • Filter dropdowns work (zone, status, type, etc.)
+           • Clearing filters restores full list
+
+[ ] 5.3  FORM VALIDATION
+         → On any form (create user, create owner, etc.):
+           • Submit empty form → validation errors appear
+           • Enter invalid email format → validation error
+           • Check required fields show error messages
+
+[ ] 5.4  LOADING STATES
+         → Navigate between pages
+         → EXPECTED: Loading spinner or skeleton shown during data fetch
+
+[ ] 5.5  ERROR STATES
+         → Stop the server (Ctrl+C in terminal #1)
+         → Try to load a page in the frontend
+         → EXPECTED: Error message shown (not a blank page)
+         → Restart the server: npm run dev
+
+[ ] 5.6  CONFIRMATION DIALOGS
+         → Try to delete/deactivate a user (Admin)
+         → EXPECTED: Confirmation dialog appears before action
+         → Click Cancel → EXPECTED: No action taken
+         → Click Confirm → EXPECTED: Action performed
+
+[ ] 5.7  RESPONSIVE LAYOUT
+         → Resize the browser window to a narrow width (mobile size ~375px)
+         → EXPECTED: Layout adapts, sidebar may collapse to hamburger menu
+         → Content remains readable and usable
+
+
+================================================================================
+================================================================================
+  PART 6: FULL WORKFLOW END-TO-END TEST
+================================================================================
+================================================================================
+
+This test simulates the complete real-world workflow from scratch:
+
+[ ] 6.1  Login as ADMIN (admin@example.com / Admin@12345)
+
+[ ] 6.2  Create a new Tax Rate
+         → Zone: Zone D
+         → Property Type: Commercial
+         → Tax Year: 2026
+         → Rate Type: percentage
+         → Rate Value: 2.5
+         → Save
+
+[ ] 6.3  Create a new Officer user (if not done in step 2.2.2)
+         → Name: Field Officer
+         → Email: field@example.com
+         → Password: Field@12345
+         → Role: officer
+         → Save
+
+[ ] 6.4  Logout from Admin
+
+[ ] 6.5  Login as OFFICER (officer@example.com / Officer@12345)
+
+[ ] 6.6  Register a new Owner
+         → Full Name: Hassan Abdi
+         → Phone: +252617778888
+         → Email: hassan@example.com
+         → National ID: ID-E2E-001
+         → Address: Karaan District, Mogadishu
+         → Save
+
+[ ] 6.7  Register a new Property for Hassan Abdi
+         → Owner: Hassan Abdi
+         → District: Karaan
+         → Zone: Zone D
+         → Property Type: Commercial
+         → Size: 300 sqm
+         → Assessed Value: 80000
+         → Usage Status: rented
+         → Save
+         → Note the property code
+
+[ ] 6.8  Generate Assessment
+         → Select Hassan Abdi's property
+         → Tax Year: 2026
+         → Penalty: 0
+         → Discount: 0
+         → Submit
+         → EXPECTED: baseTax = 80000 × 2.5 / 100 = $2,000
+         → EXPECTED: totalDue = $2,000
+
+[ ] 6.9  Create a Bill
+         → Select the assessment from step 6.8
+         → Due Date: 2026-12-31
+         → Submit
+         → EXPECTED: Bill created with amountDue = $2,000, status = "unpaid"
+
+[ ] 6.10 Record Payment ($800 partial)
+         → Select the bill from step 6.9
+         → Amount: 800
+         → Method: mobile_money
+         → Reference: PAY-E2E-001
+         → Date: today
+         → Submit
+         → EXPECTED: Bill updated: amountPaid=$800, balance=$1200, status="partial"
+
+[ ] 6.11 Record Payment ($1200 remaining)
+         → Select the same bill
+         → Amount: 1200
+         → Method: cash
+         → Reference: PAY-E2E-002
+         → Date: today
+         → Submit
+         → EXPECTED: Bill updated: amountPaid=$2000, balance=$0, status="paid"
+
+[ ] 6.12 Download Receipt PDF
+         → Find receipt for PAY-E2E-001 or PAY-E2E-002
+         → Download PDF
+         → EXPECTED: Valid PDF with all payment details
+
+[ ] 6.13 Logout from Officer
+
+[ ] 6.14 Login as ADMIN (admin@example.com / Admin@12345)
+
+[ ] 6.15 Check Reports
+         → Navigate to Reports
+         → EXPECTED: New payment appears in collections report
+         → EXPECTED: Summary totals updated with new data
+
+[ ] 6.16 Check Audit Logs
+         → Navigate to Audit Logs
+         → EXPECTED: Entries for:
+           • New owner creation
+           • New property registration
+           • Assessment generation
+           • Bill creation
+           • Payment recordings
+         → Logout
+
+
+================================================================================
+================================================================================
+  PART 7: SEEDED DATA VERIFICATION
+================================================================================
+================================================================================
+
+[ ] 7.1  Login as Admin and verify the following seeded data exists:
+
+  OWNERS (3 total):
+  ┌─────────────────┬─────────────────────────┬────────────────────────────┐
+  │ Name            │ Phone                   │ Address                    │
+  ├─────────────────┼─────────────────────────┼────────────────────────────┤
+  │ Ahmed Hassan    │ +252612345678           │ Hodan District, Mogadishu  │
+  │ Fatima Ali      │ +252612345679           │ Waberi District, Mogadishu │
+  │ Omar Yusuf      │ +252612345680           │ Hamar Weyne, Mogadishu     │
+  └─────────────────┴─────────────────────────┴────────────────────────────┘
+
+  PROPERTIES (5 total):
+  ┌────────────────┬────────┬──────────────┬──────────┬────────────┐
+  │ Code           │ Zone   │ Type         │ Value    │ Owner      │
+  ├────────────────┼────────┼──────────────┼──────────┼────────────┤
+  │ PROP-SEED-001  │ Zone A │ Residential  │ $50,000  │ Ahmed H.   │
+  │ PROP-SEED-002  │ Zone A │ Commercial   │ $120,000 │ Ahmed H.   │
+  │ PROP-SEED-003  │ Zone B │ Residential  │ $35,000  │ Fatima A.  │
+  │ PROP-SEED-004  │ Zone B │ Residential  │ $28,000  │ Fatima A.  │
+  │ PROP-SEED-005  │ Zone C │ Industrial   │ $200,000 │ Omar Y.    │
+  └────────────────┴────────┴──────────────┴──────────┴────────────┘
+
+  TAX RATES (4 total):
+  ┌────────┬──────────────┬──────┬────────────┬───────┐
+  │ Zone   │ Type         │ Year │ Rate Type  │ Value │
+  ├────────┼──────────────┼──────┼────────────┼───────┤
+  │ Zone A │ Residential  │ 2026 │ percentage │ 1.5%  │
+  │ Zone A │ Commercial   │ 2026 │ percentage │ 2.0%  │
+  │ Zone B │ Residential  │ 2026 │ fixed      │ $500  │
+  │ Zone C │ Industrial   │ 2026 │ percentage │ 3.0%  │
+  └────────┴──────────────┴──────┴────────────┴───────┘
+
+  BILLS (5 total):
+  ┌──────────────────────┬────────┬──────────┬─────────┐
+  │ Bill No              │ Status │ Due      │ Balance │
+  ├──────────────────────┼────────┼──────────┼─────────┤
+  │ BILL-2026-SEED-001   │ paid   │ Dec 2026 │ $0      │
+  │ BILL-2026-SEED-002   │ partial│ Dec 2026 │ >$0     │
+  │ BILL-2026-SEED-003   │ unpaid │ Dec 2026 │ $500    │
+  │ BILL-2026-SEED-004   │ overdue│ Mar 2026 │ $500    │
+  │ BILL-2026-SEED-005   │ unpaid │ Dec 2026 │ $6,000  │
+  └──────────────────────┴────────┴──────────┴─────────┘
+
+  PAYMENTS (2 total):
+  ┌───────────────┬────────────┬─────────┐
+  │ Reference     │ Method     │ Amount  │
+  ├───────────────┼────────────┼─────────┤
+  │ PAY-SEED-001  │ bank       │ $750    │
+  │ PAY-SEED-002  │ mobile_money│ $1,000 │
+  └───────────────┴────────────┴─────────┘
+
+
+================================================================================
+================================================================================
+  TEST RESULTS SUMMARY
+================================================================================
+================================================================================
+
+  Date Tested: _______________
+  Tested By:   _______________
+
+  PART 1 — Authentication:         _____ / 7  passed
+  PART 2 — Admin Role:             _____ / 22 passed
+  PART 3 — Officer Role:           _____ / 14 passed
+  PART 4 — Owner Role:             _____ / 9  passed
+  PART 5 — UI Quality:             _____ / 7  passed
+  PART 6 — End-to-End Workflow:     _____ / 16 passed
+  PART 7 — Seeded Data:            _____ / 1  passed
+  ─────────────────────────────────────────────────
+  TOTAL:                            _____ / 76 passed
+
+  Notes:
+  ______________________________________________________
+  ______________________________________________________
+  ______________________________________________________
+  ______________________________________________________
+
+================================================================================
+  END OF TESTING GUIDE
+================================================================================
