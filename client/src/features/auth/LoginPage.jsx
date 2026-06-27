@@ -69,7 +69,7 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 autoComplete="email"
-                placeholder="admin@example.com"
+                placeholder="admin@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={submitting}
@@ -103,9 +103,9 @@ export default function LoginPage() {
 
           <div className="mt-6 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs text-slate-500">
             <p className="font-bold text-slate-950">Demo accounts</p>
-            <p className="mt-1">admin@example.com / Admin@12345</p>
-            <p>officer@example.com / Officer@12345</p>
-            <p>owner@example.com / Owner@12345</p>
+            <p className="mt-1">admin@gmail.com / Admin@12345</p>
+            <p>officer@gmail.com / Officer@12345</p>
+            <p>owner@gmail.com / Owner@12345</p>
           </div>
         </CardContent>
       </Card>

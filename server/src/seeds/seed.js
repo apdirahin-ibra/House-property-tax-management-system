@@ -22,19 +22,19 @@ const DEMO_PROPERTY_CODE = 'PROP-SEED-001';
 const seedUsers = [
   {
     name: 'System Admin',
-    email: 'admin@example.com',
+    email: 'admin@gmail.com',
     password: 'Admin@12345',
     role: 'admin',
   },
   {
     name: 'Tax Officer',
-    email: 'officer@example.com',
+    email: 'officer@gmail.com',
     password: 'Officer@12345',
     role: 'officer',
   },
   {
     name: 'Property Owner',
-    email: 'owner@example.com',
+    email: 'owner@gmail.com',
     password: 'Owner@12345',
     role: 'owner',
   },
@@ -47,7 +47,7 @@ const sampleOwners = [
     email: 'ahmed@example.com',
     nationalId: 'ID-SEED-001',
     address: 'Hodan District, Mogadishu',
-    linkUserEmail: 'owner@example.com',
+    linkUserEmail: 'owner@gmail.com',
   },
   {
     fullName: 'Fatima Ali',
@@ -158,8 +158,8 @@ async function seedDemoData(users) {
     return;
   }
 
-  const admin = users['admin@example.com'];
-  const officer = users['officer@example.com'];
+  const admin = users['admin@gmail.com'];
+  const officer = users['officer@gmail.com'];
 
   console.log('Seeding demo data...');
 
@@ -325,7 +325,7 @@ async function seedDemoData(users) {
   console.log(`  Tax rates: ${sampleTaxRates.length}`);
   console.log(`  Bills: ${billRecords.length} (1 paid, 1 partial, 1 overdue, 2 unpaid)`);
   console.log(`  Payments: ${paymentConfigs.length}`);
-  console.log(`  Owner portal: login as owner@example.com to view Ahmed Hassan properties/bills`);
+  console.log(`  Owner portal: login as owner@gmail.com to view Ahmed Hassan properties/bills`);
 }
 
 const seed = async () => {

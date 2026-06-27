@@ -40,9 +40,9 @@ Creates demo users plus sample owners, properties, tax rates, bills, payments, r
 
 | Email | Password | Role |
 |-------|----------|------|
-| admin@example.com | Admin@12345 | admin |
-| officer@example.com | Officer@12345 | officer |
-| owner@example.com | Owner@12345 | owner |
+| admin@gmail.com | Admin@12345 | admin |
+| officer@gmail.com | Officer@12345 | officer |
+| owner@gmail.com | Owner@12345 | owner |
 
 **Seeded demo data:** 3 owners, 5 properties (Zones A/B/C), 4 tax rates, 5 bills (paid/partial/unpaid/overdue), 2 payments with receipts. The owner account is linked to **Ahmed Hassan** for the owner portal demo.
 
@@ -70,9 +70,9 @@ Use the same seed accounts as the server (run `npm run seed` in `server/` first)
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@example.com | Admin@12345 |
-| Officer | officer@example.com | Officer@12345 |
-| Owner | owner@example.com | Owner@12345 |
+| Admin | admin@gmail.com | Admin@12345 |
+| Officer | officer@gmail.com | Officer@12345 |
+| Owner | owner@gmail.com | Owner@12345 |
 
 After login, users are redirected to their role dashboard (`/admin`, `/officer`, or `/owner`).
 
