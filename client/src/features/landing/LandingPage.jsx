@@ -7,25 +7,25 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import civicHero from '../../assets/civic-ledger-hero.png';
-import reportsPreview from '../../assets/hptms-reports-preview.png';
+import civicReference from '../../assets/civic-ledger-reference.png';
 import { useAuth } from '../auth/AuthContext';
 import { getRoleHomePath } from '../../utils/storage';
 
 const proofPoints = [
   {
     icon: Building2,
-    value: 'One system',
-    label: 'Properties, bills, payments, and receipts',
+    value: '99.98%',
+    label: 'Workspace uptime',
   },
   {
     icon: ShieldCheck,
-    value: 'Role-secure',
-    label: 'Purpose-built access for every operator',
+    value: '100%',
+    label: 'Audit-ready actions',
   },
   {
     icon: ChartNoAxesCombined,
-    value: 'Audit-ready',
-    label: 'Clear reporting and traceable actions',
+    value: '2.4M+',
+    label: 'Transactions processed',
   },
 ];
 
@@ -57,14 +57,14 @@ export default function LandingPage() {
         <div className="absolute inset-y-0 left-0 w-[56%] bg-[#020706]/55 lg:w-[48%]" />
 
         <div className="relative mx-auto flex min-h-[100svh] max-w-[1480px] flex-col px-5 pb-7 pt-24 sm:px-8 sm:pt-28 lg:px-12 lg:pb-8 xl:px-16">
-          <div className="grid flex-1 items-center gap-12 pb-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-8 lg:pb-6">
-            <div className="max-w-[610px] self-center">
+          <div className="grid flex-1 items-center gap-12 pb-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-5 lg:pb-6">
+            <div className="max-w-[590px] self-center">
               <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-300/45 bg-[#06100e]/70 px-4 py-2 text-xs font-bold uppercase text-emerald-100 backdrop-blur-xl">
                 <LockKeyhole className="h-3.5 w-3.5" />
                 HPTMS · Civic ledger
               </div>
 
-              <h1 className="max-w-[610px] text-[2.75rem] font-black leading-[1.02] text-white sm:text-[3.6rem] lg:text-[4rem] xl:text-[4.35rem]">
+              <h1 className="max-w-[590px] text-[2.7rem] font-black leading-[1.04] text-white sm:text-[3.25rem] lg:text-[3.35rem] xl:text-[3.7rem]">
                 Property tax,
                 <span className="block text-emerald-300">made accountable.</span>
               </h1>
@@ -73,10 +73,10 @@ export default function LandingPage() {
                 One secure workspace for assessments, billing, EVC and eDahab payments, receipts, and reporting.
               </p>
 
-              <div className="mt-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
+              <div className="mt-8 flex flex-col items-start gap-5">
                 <Link
                   to="/login"
-                  className="group inline-flex h-14 items-center justify-center gap-4 rounded-md bg-emerald-300 px-7 text-sm font-black text-[#06110e] shadow-[0_18px_48px_rgba(16,185,129,0.24),inset_0_1px_0_rgba(255,255,255,0.55)] transition duration-300 hover:-translate-y-0.5 hover:bg-emerald-200 hover:shadow-[0_22px_58px_rgba(52,211,153,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-100"
+                  className="group inline-flex h-14 min-w-[255px] items-center justify-between gap-4 rounded-md bg-emerald-300 px-7 text-sm font-black text-[#06110e] shadow-[0_18px_48px_rgba(16,185,129,0.24),inset_0_1px_0_rgba(255,255,255,0.55)] transition duration-300 hover:-translate-y-0.5 hover:bg-emerald-200 hover:shadow-[0_22px_58px_rgba(52,211,153,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-100"
                 >
                   Open workspace
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -89,18 +89,17 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="relative hidden min-h-[500px] items-center justify-end lg:flex xl:min-h-[560px]">
-              <div className="absolute right-0 top-1/2 w-[108%] -translate-y-1/2 rotate-[1.2deg] overflow-hidden rounded-lg border border-emerald-100/20 bg-[#08110f]/80 p-2 shadow-[0_32px_90px_rgba(0,0,0,0.58),0_0_52px_rgba(16,185,129,0.08)] backdrop-blur-sm transition duration-500 hover:rotate-0 hover:border-emerald-200/35">
-                <div className="flex h-8 items-center gap-2 border-b border-white/10 px-3">
-                  <span className="h-2 w-2 rounded-full bg-emerald-300" />
-                  <span className="h-2 w-2 rounded-full bg-amber-300/80" />
-                  <span className="h-2 w-2 rounded-full bg-slate-500" />
-                  <span className="ml-2 text-[10px] font-bold uppercase text-slate-400">Live reporting workspace</span>
-                </div>
+            <div className="relative hidden min-h-[520px] items-center justify-end lg:flex xl:min-h-[570px]">
+              <div className="absolute right-0 top-1/2 aspect-[1.19/1] w-[96%] -translate-y-1/2 rotate-[1.2deg] overflow-hidden rounded-xl border border-emerald-100/20 bg-[#08110f] shadow-[0_36px_100px_rgba(0,0,0,0.62),0_0_56px_rgba(16,185,129,0.08)] transition duration-500 hover:rotate-0 hover:border-emerald-200/35">
                 <img
-                  src={reportsPreview}
-                  alt="HPTMS reports workspace showing property tax collection metrics"
-                  className="block aspect-[1.9/1] w-full rounded-b-md object-cover object-top"
+                  src={civicReference}
+                  alt="Dark HPTMS municipal revenue dashboard with collection metrics and audit activity"
+                  className="absolute max-w-none"
+                  style={{
+                    width: '190.6%',
+                    left: '-88.4%',
+                    top: '-16.3%',
+                  }}
                 />
               </div>
             </div>
@@ -110,14 +109,14 @@ export default function LandingPage() {
             {proofPoints.map(({ icon: Icon, value, label }, index) => (
               <div
                 key={value}
-                className={`flex min-h-[108px] items-center gap-4 px-5 py-5 sm:px-6 ${index > 0 ? 'border-t border-white/10 sm:border-l sm:border-t-0' : ''}`}
+                className={`flex min-h-[126px] items-center gap-5 px-5 py-5 sm:px-8 ${index > 0 ? 'border-t border-white/10 sm:border-l sm:border-t-0' : ''}`}
               >
                 <span className="flex h-10 w-10 flex-none items-center justify-center rounded-md border border-emerald-300/30 bg-emerald-300/10 text-emerald-200">
                   <Icon className="h-5 w-5" />
                 </span>
                 <span>
-                  <span className="block text-sm font-black text-white">{value}</span>
-                  <span className="mt-1 block text-xs leading-5 text-slate-400">{label}</span>
+                  <span className="block text-2xl font-black text-white xl:text-3xl">{value}</span>
+                  <span className="mt-1 block text-sm leading-5 text-slate-400">{label}</span>
                 </span>
               </div>
             ))}
