@@ -6,7 +6,6 @@ import {
   LockKeyhole,
   ShieldCheck,
 } from 'lucide-react';
-import civicHero from '../../assets/civic-ledger-hero.png';
 import civicReference from '../../assets/civic-ledger-reference.png';
 import { useAuth } from '../auth/AuthContext';
 import { getRoleHomePath } from '../../utils/storage';
@@ -46,15 +45,8 @@ export default function LandingPage() {
         Sign In
       </Link>
 
-      <section className="relative isolate min-h-[100svh]">
-        <img
-          src={civicHero}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-[64%_center]"
-        />
-        <div className="absolute inset-0 bg-[#020706]/25" />
-        <div className="absolute inset-y-0 left-0 w-[56%] bg-[#020706]/55 lg:w-[48%]" />
+      <section className="relative isolate min-h-[100svh] bg-[#030807]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_20%,rgba(16,185,129,0.12),transparent_55%),radial-gradient(ellipse_50%_40%_at_10%_80%,rgba(16,185,129,0.06),transparent_50%)]" />
 
         <div className="relative mx-auto flex min-h-[100svh] max-w-[1480px] flex-col px-5 pb-7 pt-24 sm:px-8 sm:pt-28 lg:px-12 lg:pb-8 xl:px-16">
           <div className="grid flex-1 items-center gap-12 pb-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-5 lg:pb-6">
