@@ -143,21 +143,21 @@ export default function LandingPage() {
       {/* ── Hero ── */}
       <section className="relative isolate overflow-hidden pt-16">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80')] bg-cover bg-center" />
-        <div className="absolute inset-0 bg-white/20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/10" />
+        <div className="absolute inset-0 bg-white/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-white/10 to-white/20" />
         <div className="relative z-10 mx-auto max-w-[1280px] px-6 pb-20 pt-20 sm:px-8 sm:pt-28 lg:pb-32 lg:pt-36">
           <div className="mx-auto max-w-[820px] text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-700">
               <Zap className="h-3.5 w-3.5" />
               House Property Tax Management
             </div>
-            <h1 className="text-4xl font-black leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl xl:text-7xl">
+            <h1 className="text-4xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-5xl lg:text-6xl xl:text-7xl">
               Property tax,
               <span className="block bg-gradient-to-r from-emerald-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent">
                 simplified & transparent.
               </span>
             </h1>
-            <p className="mx-auto mt-6 max-w-[640px] text-base leading-7 text-slate-500 sm:text-lg sm:leading-8">
+            <p className="mx-auto mt-6 max-w-[640px] text-base leading-7 text-slate-700 sm:text-lg sm:leading-8">
               A complete platform for municipalities to manage property assessments, 
               billing, mobile-money payments, digital receipts, and reporting — all in one secure workspace.
             </p>
@@ -171,7 +171,7 @@ export default function LandingPage() {
               </Link>
               <Link
                 to="/login"
-                className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl border border-slate-300 px-8 text-sm font-semibold text-slate-600 transition hover:border-slate-400 hover:text-slate-900 sm:w-auto"
+                className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white/80 px-8 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-900 sm:w-auto"
               >
                 <ShieldCheck className="h-4 w-4" />
                 View demo
