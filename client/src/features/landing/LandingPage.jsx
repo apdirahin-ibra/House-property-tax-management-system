@@ -143,8 +143,8 @@ export default function LandingPage() {
       {/* ── Hero ── */}
       <section className="relative isolate overflow-hidden pt-16">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80')] bg-cover bg-center" />
-        <div className="absolute inset-0 bg-white/70 backdrop-blur-sm" />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/50 to-white/80" />
+        <div className="absolute inset-0 bg-white/20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/10" />
         <div className="relative z-10 mx-auto max-w-[1280px] px-6 pb-20 pt-20 sm:px-8 sm:pt-28 lg:pb-32 lg:pt-36">
           <div className="mx-auto max-w-[820px] text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-700">
